@@ -1,3 +1,6 @@
+
+
+
 /*******************************************************************************
  *
  * MIDI_lib: is midi lib
@@ -34,7 +37,7 @@ extern "C" {
 
     
 
-#define MIDI_OUTGOING_ENABLE
+//#define MIDI_OUTGOING_ENABLE
 //#define MIDI_INPUT_ENABLE
 
 #define PUT_MIDI_STATUS_BYTE_OPTIMIZATION_ENABLE
@@ -51,6 +54,8 @@ extern "C" {
 //////////////////////////////////////////////////////
                                                         //
 //#define MIDI_OUT_EMPTY_EXAMPLE  // enable this macro for compilation test
+
+
 
 
 
