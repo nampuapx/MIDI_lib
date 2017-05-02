@@ -31,7 +31,7 @@
 extern "C" {
 #endif
 
-#define uint8_t unsigned char
+//#define uint8_t unsigned char
  
  #ifdef MIDI_OUTGOING_ENABLE 
  
