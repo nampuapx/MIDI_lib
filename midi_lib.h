@@ -27,20 +27,13 @@
 #ifndef MIDI_H
 #define	MIDI_H
 
-//#ifdef	__cplusplus
-//extern "C" {
-//#endif
+
 
 #include "midi_lib_config.h"
-//  void set_cc_param(unsigned char * midi_message);
 
 void midi_parser_byte(uint8_t midi_byte);
     
-    
 
-//#ifdef	__cplusplus
-//}
-//#endif
 
 #endif	/* MIDI_H */
 

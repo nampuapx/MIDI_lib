@@ -40,12 +40,12 @@
 
 #ifdef PUT_MIDI_STATUS_BYTE_OPTIMIZATION_ENABLE
 void put_MIDI_status_byte(uint8_t status_byte){
-    static uint8_t pred_status_byte;
+	static uint8_t prev_status_byte;
     
-    if(status_byte != pred_status_byte){
-        MIDI_port_serial_byte_out(status_byte);
-        pred_status_byte = status_byte;
-    }
+	if(status_byte != prev_status_byte){
+		MIDI_port_serial_byte_out(status_byte);
+		prev_status_byte = status_byte;
+	}
 }
 #else
 
@@ -69,15 +69,15 @@ __weak void put_MIDI_real_time(uint8_t real_time_command){
 
 __weak void put_MIDI_command_3b(uint8_t status_byte, uint8_t byte_1, uint8_t byte_2){
 
-  put_MIDI_status_byte(status_byte);
-  MIDI_port_serial_byte_out(byte_1);
-  MIDI_port_serial_byte_out(byte_2);
+	put_MIDI_status_byte(status_byte);
+	MIDI_port_serial_byte_out(byte_1);
+	MIDI_port_serial_byte_out(byte_2);
 }
 
 __weak void put_MIDI_command_2b(uint8_t status_byte, uint8_t byte_1){
     
-  MIDI_port_serial_byte_out(status_byte);
-  MIDI_port_serial_byte_out(byte_1);
+	MIDI_port_serial_byte_out(status_byte);
+	MIDI_port_serial_byte_out(byte_1);
 }
 
 
