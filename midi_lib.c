@@ -48,17 +48,26 @@ enum{
    MIDI_REAL_TIME_System_Reset      = 0xff   
 };
 
+#define 	CC_OR_CHAN_MODE_THR		0x78
+
  //MIDI_Channel_msg
 enum{
     Voice_CC_or_MIDI_Channel_Mode       = 0xb0, // second byte <=0x77 CC, >=0x78 Channel_Mode
     MIDI_Channel_Voice_Note_off         = 0x80,
     MIDI_Channel_Voice_Note_on          = 0x90,
     MIDI_Channel_Poly_Key_Pressure      = 0xA0, // Aftertouch key (poly)
-  //MIDI_Channel_Mode_or_Voice_CC       = 0xb0, // second byte <=0x77 CC, >=0x78 Channel_Mode   
+  //MIDI_Channel_Mode_or_Voice_CC       = 0xb0, // second byte <0x78 CC, >=0x78 Channel_Mode
     MIDI_Channel_Voice_Program_Change   = 0xC0,     
     MIDI_Channel_Pressure               = 0xD0, //Aftertouch chanel
     MIDI_Channel_Voice_Pitch_Bend       = 0xE0
 };
+
+#define		MIDI_ClOCK_PER_ONE_BPM	24
+
+#define		STATUS_BYTE_MASK	 	0x80
+#define		CHANNEL_NUM_MASK		0x0f
+#define		STATUS_MASK				0xf0
+
 
 
 uint8_t RunningStatus=0 ,bpm_divider=0;
@@ -103,7 +112,7 @@ void midi_parser_byte(uint8_t midi_byte){
 
 static uint8_t  data_count,command_length;
         
-	if(midi_byte & 0x80){
+	if(midi_byte & STATUS_BYTE_MASK){
 		//status incoming
 			if(midi_byte >= MIDI_REAL_TIME_Clock){
 			//System Real-Time Messages /////////////////////////////////////////
@@ -111,9 +120,9 @@ static uint8_t  data_count,command_length;
 						case MIDI_REAL_TIME_Clock:
 							MIDI_recive_clock_pulse_handler();     //midi clock
 
-							bpm_divider %=24;
+							bpm_divider %= MIDI_ClOCK_PER_ONE_BPM;
 							if(!bpm_divider){
-								MIDI_bpm_pulse_handler();        //bpm pulse (24 MIDI Clock per 1 bpm step)
+								MIDI_bpm_pulse_handler();
 							}
 							bpm_divider++;
 							break;
@@ -133,7 +142,7 @@ static uint8_t  data_count,command_length;
 			}else{
 				//not real time
 				RunningStatus = midi_byte;
-				data_count = 0;
+				data_count = 0; //new Running Status, data pointer reset
 
 				switch(RunningStatus){
 					case MIDI_Channel_Voice_Program_Change:
@@ -148,7 +157,7 @@ static uint8_t  data_count,command_length;
 			}
 
 		}else{
-		// Data Bytes icoming
+		// Data Bytes incoming
 
 			data_count %= command_length;
 			data[data_count] = midi_byte;
@@ -157,21 +166,21 @@ static uint8_t  data_count,command_length;
 			if(data_count == command_length){
 				//mesg_done
 
-				switch(RunningStatus & 0xf0) {
+				switch(RunningStatus & STATUS_MASK) {
 					case Voice_CC_or_MIDI_Channel_Mode:
-						if(data[0]<0x78){
+						if(data[0] < CC_OR_CHAN_MODE_THR){
 						// CC
-							MIDI_recive_CC_handler(RunningStatus & 0x0f,data[0],data[1]);
+							MIDI_recive_CC_handler(RunningStatus & CHANNEL_NUM_MASK, data[0], data[1]);
 						}else{
 						// MIDI Channel Mode Messages
 						}
 						break;
 
 					case MIDI_Channel_Voice_Note_on:
-						MIDI_recive_note_on_handler(RunningStatus & 0x0f,data[0],data[1]);
+						MIDI_recive_note_on_handler(RunningStatus & CHANNEL_NUM_MASK, data[0], data[1]);
 						break;
 					case MIDI_Channel_Voice_Note_off:
-						MIDI_recive_note_off_handler(RunningStatus & 0x0f,data[0],data[1]);
+						MIDI_recive_note_off_handler(RunningStatus & CHANNEL_NUM_MASK, data[0], data[1]);
 						break;
 	
 				}//switch
