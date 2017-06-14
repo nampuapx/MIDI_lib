@@ -43,6 +43,10 @@ void put_MIDI_command_2b(uint8_t status_byte, uint8_t byte_1);
 
 
 
+void MIDI_port_serial_byte_out(uint8_t byte);
+void MIDI_port_serial_n_bytes_out(uint8_t * byte, uint8_t amount);
+void put_MIDI_real_time(uint8_t real_time_command);
+
 #endif
 
 
