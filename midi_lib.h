@@ -31,6 +31,8 @@
 
 #include "midi_lib_config.h"
 
+#define MIDI_CLOCK_PER_BEAT	24
+
 void midi_parser_byte(uint8_t midi_byte);
     
 
