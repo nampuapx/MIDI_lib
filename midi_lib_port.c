@@ -25,8 +25,6 @@
  ******************************************************************************/
  
 #include "midi_lib.h"
-#include "midi_lib_config.h"
-#include "midi_lib_port.h"
 
 //MIDI out func implementation
 

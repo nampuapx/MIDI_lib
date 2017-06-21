@@ -31,6 +31,8 @@
 extern "C" {
 #endif
 
+#include "stm32f1xx_hal.h"
+#include "midi_lib_config.h"
 //#define uint8_t unsigned char
  
  #ifdef MIDI_OUTGOING_ENABLE 
