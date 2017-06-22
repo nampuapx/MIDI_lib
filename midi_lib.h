@@ -66,7 +66,13 @@ enum{
 
 #define		MIDI_CLOCK_PER_BEAT	24
 
+void put_MIDI_CC(uint8_t chanel, uint8_t CC_num, uint8_t CC_value);
+void put_MIDI_note_off(uint8_t chanel, uint8_t note_num, uint8_t note_vel);
+void put_MIDI_note_on(uint8_t chanel, uint8_t note_num, uint8_t note_vel);
 
+void put_MIDI_clock(void);
+void put_MIDI_start(void);
+void put_MIDI_stop(void);
 void midi_parser_byte(uint8_t midi_byte);
     
 
